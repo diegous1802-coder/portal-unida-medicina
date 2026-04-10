@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portal de Agendamiento · Coordinación · UNIDA Medicina</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#f4f6fb;min-height:100vh;color:#1a1a2e;}
+.topbar{background:#0F6E56;padding:0 24px;display:flex;align-items:center;gap:12px;height:52px;}
+.topbar-t{color:#fff;font-size:15px;font-weight:600;}
+.topbar-s{color:rgba(255,255,255,.7);font-size:12px;margin-left:auto;}
+.wrap{max-width:860px;margin:0 auto;padding:1.5rem 1rem;}
+.page-title{font-size:22px;font-weight:700;color:#0F6E56;margin-bottom:4px;}
+.page-sub{font-size:14px;color:#666;margin-bottom:1.5rem;}
+.card{background:#fff;border:1px solid #e8eaf0;border-radius:14px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.mode-tabs{display:flex;background:#eef0f7;border-radius:12px;padding:4px;gap:4px;margin-bottom:1.5rem;}
+.mode-btn{flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:9px;border-radius:9px;cursor:pointer;border:none;background:transparent;color:#999;transition:all .2s;}
+.mode-btn.active{background:#fff;color:#0F6E56;box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.section-label{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;}
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.week-lbl{font-size:14px;font-weight:600;color:#1a1a2e;flex:1;text-align:center;}
+.btn{font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:9px;cursor:pointer;transition:all .15s;border:1.5px solid #dde0eb;background:transparent;color:#333;}
+.btn:hover{background:#f0f2f8;}.btn:active{transform:scale(.98);}.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-icon{padding:7px 12px;}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5;}.btn-primary:hover{background:#0C447C;}
+.btn-amber{background:#BA7517;color:#fff;border-color:#BA7517;}.btn-amber:hover{background:#854F0B;}
+input,select{font-family:inherit;font-size:13px;padding:7px 10px;border:1.5px solid #dde0eb;border-radius:8px;background:#fff;color:#1a1a2e;outline:none;}
+input:focus,select:focus{border-color:#185FA5;}
+.doc-stabs{display:flex;gap:8px;margin-bottom:1rem;}
+.doc-stab{font-family:inherit;font-size:13px;font-weight:600;padding:7px 16px;border-radius:8px;cursor:pointer;border:1.5px solid #dde0eb;background:#f4f6fb;color:#999;transition:all .15s;}
+.doc-stab.aj{background:#E6F1FB;color:#0C447C;border-color:#85B7EB;}
+.doc-stab.ad{background:#E1F5EE;color:#085041;border-color:#5DCAA5;}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;}
+.av-j{background:#E6F1FB;color:#0C447C;}.av-d{background:#E1F5EE;color:#085041;}
+.doc-hdr{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.day-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1rem;}
+.day-card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;padding:10px;}
+.day-nm{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;margin-bottom:2px;}
+.day-dt{font-size:10px;color:#bbb;margin-bottom:7px;}
+.slot-row{display:flex;align-items:center;justify-content:space-between;padding:5px 7px;border-radius:6px;font-size:12px;font-weight:600;margin-bottom:4px;}
+.slot-row.fj{background:#E6F1FB;color:#0C447C;}.slot-row.fd{background:#E1F5EE;color:#085041;}.slot-row.occ{background:#FCEBEB;color:#791F1F;}
+.del-btn{background:none;border:none;cursor:pointer;color:inherit;opacity:.55;font-size:14px;line-height:1;}
+.del-btn:hover{opacity:1;}
+.add-row{display:flex;gap:5px;margin-top:7px;}
+.add-row select{font-size:11px;padding:4px 6px;flex:1;border-radius:7px;}
+.add-row .btn{font-size:11px;padding:4px 9px;}
+.no-slots{font-size:11px;color:#ccc;text-align:center;padding:7px 0;}
+.notif-bar{display:flex;align-items:center;gap:10px;background:#FFF8EC;border:1px solid #F5C660;border-radius:10px;padding:10px 16px;margin-bottom:.75rem;flex-wrap:wrap;}
+.notif-bar span{font-size:13px;color:#633806;flex:1;}
+.ns{font-size:13px;min-height:18px;margin-bottom:.75rem;}
+.ns-ok{color:#1D9E75;}.ns-err{color:#E24B4A;}.ns-load{color:#378ADD;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+.stat{background:#f4f6fb;border-radius:10px;padding:12px 14px;}
+.stat-lbl{font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.stat-val{font-size:22px;font-weight:700;color:#1a1a2e;margin-top:3px;}
+.view-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.view-tbl th{font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:2px solid #eee;text-align:left;}
+.view-tbl td{padding:8px 10px;border-bottom:1px solid #f0f2f8;color:#1a1a2e;}
+.view-tbl tr:hover td{background:#f8f9fc;}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;}
+.filter-row select{font-size:13px;padding:7px 12px;border-radius:9px;cursor:pointer;}
+.cita-card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px;}
+.cita-card:hover{border-color:#c0cce8;}
+.cita-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.cita-name{font-size:15px;font-weight:700;}
+.cita-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;}
+.cita-row{display:flex;flex-direction:column;gap:2px;}
+.ck{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+.cv{color:#333;font-weight:500;}
+.cita-tema{grid-column:1/-1;background:#f8f9fc;border-radius:8px;padding:8px 10px;margin-top:6px;font-size:13px;color:#555;line-height:1.5;border-left:3px solid #185FA5;}
+.empty-msg{text-align:center;padding:2.5rem;color:#aaa;font-size:14px;}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;}
+.bj{background:#E6F1FB;color:#0C447C;}.bd{background:#E1F5EE;color:#085041;}.bocc{background:#FCEBEB;color:#791F1F;}
+.no-avail{text-align:center;padding:2rem;color:#888;font-size:14px;background:#f8f9fc;border-radius:10px;}
+.spinner{width:32px;height:32px;border:3px solid #e0e4f0;border-top:3px solid #0F6E56;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:2.5rem;}
+.saving-toast{position:fixed;bottom:20px;right:20px;background:#1D9E75;color:#fff;font-size:13px;font-weight:600;padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99;}
+.saving-toast.show{opacity:1;}
+@media(max-width:600px){.day-grid{grid-template-columns:1fr 1fr}.stat-row{grid-template-columns:1fr 1fr}.cita-detail{grid-column:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2.5" stroke="#fff" stroke-width="1.4"/><path d="M6 8h8M6 12h5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
+  </div>
+  <span class="topbar-t">Coordinación Académica · UNIDA Medicina</span>
+  <span class="topbar-s">Dr. Joel Lopez · Dr. Diego Cantero</span>
+</div>
+<div class="saving-toast" id="toast">Guardado ✓</div>
+<div class="wrap">
+  <div class="page-title">Panel de coordinación</div>
+  <div class="page-sub">Gestioná la agenda y las citas confirmadas</div>
+  <div class="mode-tabs">
+    <button class="mode-btn active" id="mb-agenda" onclick="setTab('agenda')">Agenda</button>
+    <button class="mode-btn" id="mb-citas" onclick="setTab('citas')">Citas confirmadas</button>
+    <button class="mode-btn" id="mb-general" onclick="setTab('general')">Vista general</button>
+  </div>
+  <div id="tab-content"><div class="loading"><div class="spinner"></div><p style="color:#aaa;font-size:14px">Cargando datos…</p></div></div>
+</div>
+<script>
+// ════════════════════════════════════════════════════
+// CONFIGURACIÓN — pegá tu URL de Apps Script aquí
+// ════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-3Ps2DWWgUe7J9pefJdCdMcLEETHowBOLGsOmbiQqhJ8C_gunh1XmQ3nvJN6v3Xw/exec';
+// ════════════════════════════════════════════════════
+
+const DAYS=["Lunes","Martes","Miércoles","Jueves","Viernes"];
+const HOURS=["07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
+const DOCS={joel:{name:"Dr. Joel Lopez",role:"Coordinador",av:"JL",cls:"j"},diego:{name:"Dr. Diego Cantero",role:"Subcoordinador",av:"DC",cls:"d"}};
+const TO1="clopez@unida.edu.py",TO2="subcoordiacion.medicinacde@unida.edu.py";
+const API="https://api.anthropic.com/v1/messages";
+const MODEL="claude-sonnet-4-20250514";
+
+let db={},citas=[];
+let currentTab="agenda",adminDocTab="joel",adminWeekOffset=0,genWeekOffset=0;
+let filterDoc="all",filterWeek="all";
+
+function showToast(){const t=document.getElementById("toast");t.className="saving-toast show";setTimeout(()=>t.className="saving-toast",2000);}
+function escH(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+async function cloudLoad(){
+  try{
+    const r=await fetch(SCRIPT_URL+"?action=getDb");
+    const j=await r.json();if(j.ok)db=j.data||{};
+    const r2=await fetch(SCRIPT_URL+"?action=getCitas");
+    const j2=await r2.json();if(j2.ok)citas=j2.data||[];
+  }catch(e){console.warn("cloudLoad error",e);}
+}
+async function cloudSaveDb(){
+  if(SCRIPT_URL==="REEMPLAZAR_CON_TU_URL")return;
+  try{await fetch(SCRIPT_URL+"?action=saveDb&data="+encodeURIComponent(JSON.stringify(db)));showToast();}catch(e){}
+}
+
+function wKey(o){const d=new Date();d.setDate(d.getDate()-d.getDay()+1+o*7);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");}
+function wDates(o){const d=new Date();d.setDate(d.getDate()-d.getDay()+1+o*7);return Array.from({length:5},(_,i)=>{const n=new Date(d);n.setDate(d.getDate()+i);return n;});}
+function fmt(d){return d.getDate().toString().padStart(2,"0")+"/"+(d.getMonth()+1).toString().padStart(2,"0");}
+function wLabel(o){const d=wDates(o);return fmt(d[0])+" - "+fmt(d[4])+" "+d[0].getFullYear();}
+function getSlots(doc,o){return db[doc+"_"+wKey(o)]||{};}
+
+function setTab(t){
+  currentTab=t;
+  ["agenda","citas","general"].forEach(k=>document.getElementById("mb-"+k).className="mode-btn"+(k===t?" active":""));
+  renderTab();
+}
+function renderTab(){
+  const el=document.getElementById("tab-content");
+  if(currentTab==="agenda")el.innerHTML=renderAgenda();
+  else if(currentTab==="citas")el.innerHTML=renderCitas();
+  else el.innerHTML=renderGeneral();
+}
+
+function renderAgenda(){
+  return "<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem;\"><div><strong style=\"font-size:15px\">Agenda semanal</strong><p style=\"font-size:13px;color:#888;margin-top:2px\">Cargá los horarios disponibles por semana</p></div><div class=\"week-nav\" style=\"margin:0\"><button class=\"btn btn-icon\" onclick=\"aChW(-1)\">&#8592;</button><span style=\"font-size:14px;font-weight:600;min-width:180px;text-align:center\">"+wLabel(adminWeekOffset)+"</span><button class=\"btn btn-icon\" onclick=\"aChW(1)\">&#8594;</button></div></div><div class=\"notif-bar\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\"><rect x=\"1\" y=\"3\" width=\"14\" height=\"10\" rx=\"2\" stroke=\"#854F0B\" stroke-width=\"1.2\"/><path d=\"M1 5l7 5 7-5\" stroke=\"#854F0B\" stroke-width=\"1.2\"/></svg><span>Notificar agenda a <strong>"+TO1+"</strong> y <strong>"+TO2+"</strong></span><button class=\"btn btn-amber\" onclick=\"sendEmail()\">Enviar notificación</button></div><div class=\"ns\" id=\"notif-status\"></div><div class=\"doc-stabs\"><button class=\"doc-stab"+(adminDocTab==="joel"?" aj":"")+"\" onclick=\"setDocTab('joel')\">Dr. Joel Lopez</button><button class=\"doc-stab"+(adminDocTab==="diego"?" ad":"")+"\" onclick=\"setDocTab('diego')\">Dr. Diego Cantero</button></div>"+renderDocAdmin(adminDocTab);
+}
+
+function setDocTab(doc){adminDocTab=doc;renderTab();}
+function aChW(dir){adminWeekOffset+=dir;renderTab();}
+
+function renderDocAdmin(doc){
+  const dInfo=DOCS[doc];const slots=getSlots(doc,adminWeekOffset);const dates=wDates(adminWeekOffset);
+  let html="<div class=\"doc-hdr\"><div class=\"avatar av-"+dInfo.cls+"\">"+dInfo.av+"</div><div><div style=\"font-size:15px;font-weight:700\">"+dInfo.name+"</div><div style=\"font-size:12px;color:#888\">"+dInfo.role+"</div></div></div><div class=\"day-grid\">";
+  dates.forEach((date,i)=>{
+    const dayName=DAYS[i];const daySlots=slots[dayName]||[];
+    html+="<div class=\"day-card\"><div class=\"day-nm\">"+dayName.substring(0,3)+"</div><div class=\"day-dt\">"+fmt(date)+"</div>";
+    if(!daySlots.length)html+="<div class=\"no-slots\">Sin horarios</div>";
+    else daySlots.forEach((s,si)=>html+="<div class=\"slot-row "+(s.occupied?"occ":"f"+dInfo.cls)+"\">"+s.time+(s.occupied?" <span style=\"font-size:9px\">(ocup.)</span>":"")+"<button class=\"del-btn\" onclick=\"adminDel('"+doc+"','"+dayName+"',"+si+")\">&#10005;</button></div>");
+    html+="<div class=\"add-row\"><select id=\"sel-"+doc+"-"+i+"\">";
+    HOURS.forEach(h=>html+="<option>"+h+"</option>");
+    html+="</select><button class=\"btn btn-primary\" onclick=\"adminAdd('"+doc+"','"+dayName+"',"+i+")\">+</button></div></div>";
+  });
+  return html+"</div>";
+}
+
+async function adminAdd(doc,dayName,di){
+  const sel=document.getElementById("sel-"+doc+"-"+di);const time=sel.value;
+  const slots=getSlots(doc,adminWeekOffset);if(!slots[dayName])slots[dayName]=[];
+  if(slots[dayName].find(s=>s.time===time))return;
+  slots[dayName].push({time,occupied:false});slots[dayName].sort((a,b)=>a.time.localeCompare(b.time));
+  db[doc+"_"+wKey(adminWeekOffset)]=slots;
+  await cloudSaveDb();renderTab();
+}
+async function adminDel(doc,dayName,idx){
+  const slots=getSlots(doc,adminWeekOffset);if(slots[dayName])slots[dayName].splice(idx,1);
+  db[doc+"_"+wKey(adminWeekOffset)]=slots;
+  await cloudSaveDb();renderTab();
+}
+
+async function sendEmail(){
+  const btn=event.target;const status=document.getElementById("notif-status");
+  btn.disabled=true;status.className="ns ns-load";status.textContent="Enviando correo…";
+  const jS=getSlots("joel",adminWeekOffset);const dS=getSlots("diego",adminWeekOffset);const dates=wDates(adminWeekOffset);const weekStr=wLabel(adminWeekOffset);
+  let rows="";let hasAny=false;
+  dates.forEach((date,i)=>{
+    const dn=DAYS[i];const jD=jS[dn]||[];const dD=dS[dn]||[];
+    const all=new Set();jD.forEach(s=>all.add(s.time));dD.forEach(s=>all.add(s.time));
+    [...all].sort().forEach(t=>{
+      const j=jD.find(s=>s.time===t);const d=dD.find(s=>s.time===t);
+      rows+="<tr><td style=\"padding:6px 10px;border-bottom:1px solid #eee\">"+dn+"</td><td style=\"padding:6px 10px;border-bottom:1px solid #eee\">"+fmt(date)+"</td><td style=\"padding:6px 10px;border-bottom:1px solid #eee\">"+t+"</td><td style=\"padding:6px 10px;border-bottom:1px solid #eee;color:"+(j&&j.occupied?"#A32D2D":j?"#185FA5":"#aaa")+"\">"+( j?(j.occupied?"OCUPADO":"Disponible"):"—")+"</td><td style=\"padding:6px 10px;border-bottom:1px solid #eee;color:"+(d&&d.occupied?"#A32D2D":d?"#0F6E56":"#aaa")+"\">"+( d?(d.occupied?"OCUPADO":"Disponible"):"—")+"</td></tr>";
+      hasAny=true;
+    });
+  });
+  const eHtml="<div style=\"font-family:Arial,sans-serif;max-width:620px;margin:0 auto\"><div style=\"background:#185FA5;padding:18px 24px;border-radius:8px 8px 0 0\"><p style=\"color:#fff;font-size:11px;margin:0;text-transform:uppercase\">Coordinación Académica · Medicina</p><h2 style=\"color:#fff;font-size:20px;margin:6px 0 0\">Agenda semanal de citas</h2></div><div style=\"background:#f9f9f9;padding:18px 24px;border-radius:0 0 8px 8px;border:1px solid #e8e8e8\"><p style=\"font-size:14px;color:#555;margin:0 0 16px\">Semana: <strong>"+weekStr+"</strong></p>"+(hasAny?"<table style=\"width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #eee\"><thead><tr style=\"background:#f0f0f0\"><th style=\"padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#666\">Día</th><th style=\"padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#666\">Fecha</th><th style=\"padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#666\">Hora</th><th style=\"padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#185FA5\">Dr. Joel Lopez</th><th style=\"padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#0F6E56\">Dr. Diego Cantero</th></tr></thead><tbody>"+rows+"</tbody></table>":"<p style=\"color:#aaa;text-align:center\">Sin horarios cargados.</p>")+"<p style=\"font-size:11px;color:#aaa;margin-top:16px\">Portal de Agendamiento · UNIDA Medicina</p></div></div>";
+  try{
+    const res=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:MODEL,max_tokens:400,system:"Creá un borrador de correo Gmail.",messages:[{role:"user",content:"Borrador: Para: "+TO1+", "+TO2+" — Asunto: Agenda semanal · Coordinación Medicina UNIDA · "+weekStr+" — HTML: "+eHtml}],mcp_servers:[{type:"url",url:"https://gmail.mcp.claude.com/mcp",name:"gmail-mcp"}]})});
+    const data=await res.json();
+    const ok=(data.content||[]).some(b=>b.type==="mcp_tool_result"||b.type==="mcp_tool_use");
+    status.className="ns ns-ok";status.textContent=ok?"Borrador creado en Gmail para "+TO1+" y "+TO2+". Revisá borradores.":"Revisá tu bandeja de borradores en Gmail.";
+  }catch(e){status.className="ns ns-err";status.textContent="Error de conexión.";}
+  btn.disabled=false;
+}
+
+function renderCitas(){
+  const weeks=[...new Set(citas.map(c=>c.weekLabel))];
+  let filtered=[...citas].filter(c=>(filterDoc==="all"||c.doc===filterDoc)&&(filterWeek==="all"||c.weekLabel===filterWeek)).reverse();
+  let html="<div style=\"margin-bottom:1.25rem\"><strong style=\"font-size:15px\">Citas confirmadas</strong><p style=\"font-size:13px;color:#888;margin-top:2px\">"+citas.length+" cita"+(citas.length!==1?"s":"")+" registrada"+(citas.length!==1?"s":"")+"</p></div><div class=\"stat-row\"><div class=\"stat\"><div class=\"stat-lbl\">Total</div><div class=\"stat-val\">"+citas.length+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Dr. Lopez</div><div class=\"stat-val\">"+citas.filter(c=>c.doc==="joel").length+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Dr. Cantero</div><div class=\"stat-val\">"+citas.filter(c=>c.doc==="diego").length+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Esta semana</div><div class=\"stat-val\">"+citas.filter(c=>c.weekLabel===wLabel(0)).length+"</div></div></div><div class=\"filter-row\"><select onchange=\"filterDoc=this.value;renderTab()\"><option value=\"all\">Todos los doctores</option><option value=\"joel\""+( filterDoc==="joel"?" selected":"")+">Dr. Joel Lopez</option><option value=\"diego\""+( filterDoc==="diego"?" selected":"")+">Dr. Diego Cantero</option></select><select onchange=\"filterWeek=this.value;renderTab()\"><option value=\"all\">Todas las semanas</option>"+weeks.map(w=>"<option value=\""+w+"\""+( filterWeek===w?" selected":"")+">"+w+"</option>").join("")+"</select><span style=\"font-size:13px;color:#aaa;margin-left:auto\">"+filtered.length+" resultado"+(filtered.length!==1?"s":"")+"</span></div>";
+  if(!filtered.length)return html+"<div class=\"empty-msg\">No hay citas con los filtros seleccionados</div>";
+  filtered.forEach(c=>{const dInfo=DOCS[c.doc]||{name:c.doc,cls:"j"};html+="<div class=\"cita-card\"><div class=\"cita-header\"><div class=\"cita-name\">"+escH(c.nombre+" "+c.apellido)+"</div><div style=\"display:flex;gap:6px;flex-wrap:wrap\"><span class=\"badge b"+dInfo.cls+"\">"+dInfo.name+"</span><span class=\"badge\" style=\"background:#f0f2f8;color:#888\">"+c.ref+"</span></div></div><div class=\"cita-detail\"><div class=\"cita-row\"><span class=\"ck\">Matrícula</span><span class=\"cv\">"+escH(c.matricula)+"</span></div><div class=\"cita-row\"><span class=\"ck\">Correo</span><span class=\"cv\">"+escH(c.correo)+"</span></div><div class=\"cita-row\"><span class=\"ck\">Día y hora</span><span class=\"cv\" style=\"color:#185FA5;font-weight:700\">"+c.day+" "+c.dateStr+" · "+c.time+"</span></div><div class=\"cita-row\"><span class=\"ck\">Semana</span><span class=\"cv\">"+c.weekLabel+"</span></div><div class=\"cita-tema\"><strong>Tema:</strong> "+escH(c.tema)+"</div></div></div>";});
+  return html;
+}
+
+function renderGeneral(){
+  const dates=wDates(genWeekOffset);const jS=getSlots("joel",genWeekOffset);const dS=getSlots("diego",genWeekOffset);
+  let tJ=0,tD=0,tOcc=0,rows=[];
+  dates.forEach((date,i)=>{
+    const dn=DAYS[i];const all=new Set();
+    (jS[dn]||[]).forEach(s=>all.add(s.time));(dS[dn]||[]).forEach(s=>all.add(s.time));
+    [...all].sort().forEach(t=>{
+      const j=(jS[dn]||[]).find(s=>s.time===t);const d=(dS[dn]||[]).find(s=>s.time===t);
+      if(j)tJ++;if(d)tD++;if((j&&j.occupied)||(d&&d.occupied))tOcc++;
+      rows.push({day:dn,date:fmt(date),time:t,j,d});
+    });
+  });
+  let html="<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem;\"><div><strong style=\"font-size:15px\">Vista general</strong><p style=\"font-size:13px;color:#888;margin-top:2px\">"+wLabel(genWeekOffset)+"</p></div><div class=\"week-nav\" style=\"margin:0\"><button class=\"btn btn-icon\" onclick=\"gChW(-1)\">&#8592;</button><span style=\"font-size:14px;font-weight:600;min-width:170px;text-align:center\">"+wLabel(genWeekOffset)+"</span><button class=\"btn btn-icon\" onclick=\"gChW(1)\">&#8594;</button></div></div><div class=\"stat-row\"><div class=\"stat\"><div class=\"stat-lbl\">Dr. Lopez</div><div class=\"stat-val\">"+tJ+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Dr. Cantero</div><div class=\"stat-val\">"+tD+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Ocupados</div><div class=\"stat-val\">"+tOcc+"</div></div><div class=\"stat\"><div class=\"stat-lbl\">Disponibles</div><div class=\"stat-val\">"+Math.max(0,tJ+tD-tOcc)+"</div></div></div>";
+  if(!rows.length)return html+"<div class=\"no-avail\">No hay horarios cargados para esta semana.</div>";
+  html+="<div style=\"overflow-x:auto\"><table class=\"view-tbl\"><thead><tr><th>Día</th><th>Fecha</th><th>Hora</th><th>Dr. Joel Lopez</th><th>Dr. Diego Cantero</th></tr></thead><tbody>";
+  rows.forEach(r=>{
+    const jb=r.j?(r.j.occupied?"<span class=\"badge bocc\">Ocupado</span>":"<span class=\"badge bj\">Disponible</span>"):"<span style=\"color:#ddd;font-size:11px\">—</span>";
+    const db2=r.d?(r.d.occupied?"<span class=\"badge bocc\">Ocupado</span>":"<span class=\"badge bd\">Disponible</span>"):"<span style=\"color:#ddd;font-size:11px\">—</span>";
+    html+="<tr><td>"+r.day+"</td><td>"+r.date+"</td><td><strong>"+r.time+"</strong></td><td>"+jb+"</td><td>"+db2+"</td></tr>";
+  });
+  return html+"</tbody></table></div>";
+}
+function gChW(dir){genWeekOffset+=dir;renderTab();}
+
+cloudLoad().then(()=>setTab("agenda"));
+</script>
+</body>
+</html>
